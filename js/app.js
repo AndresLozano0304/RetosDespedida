@@ -262,12 +262,14 @@
     }
     var img = new Image();
     img.onload = function () {
-      imageAvailability[file] = "ok";
-      cb("ok");
+      var info = { status: "ok", width: img.naturalWidth, height: img.naturalHeight };
+      imageAvailability[file] = info;
+      cb(info);
     };
     img.onerror = function () {
-      imageAvailability[file] = "missing";
-      cb("missing");
+      var info = { status: "missing" };
+      imageAvailability[file] = info;
+      cb(info);
     };
     img.src = file;
   }
@@ -312,15 +314,20 @@
 
       elPrizeGrids.appendChild(wrap);
 
-      checkImageAvailability(prizeImg.file, function (status) {
+      checkImageAvailability(prizeImg.file, function (info) {
         grid.innerHTML = "";
-        if (status === "missing") {
+        if (info.status === "missing") {
           var pending = document.createElement("div");
           pending.className = "prize-pending";
           pending.textContent = "📷 Imagen pendiente (" + prizeImg.file + ")";
           grid.appendChild(pending);
           return;
         }
+        // El contenedor debe tener el aspect-ratio REAL de la foto (no el de
+        // filas x columnas): background-size escala respecto a la caja de
+        // cada pieza, asi que si la caja no respeta la proporcion original
+        // de la imagen, cada pieza sale estirada/deformada.
+        grid.style.aspectRatio = info.width + " / " + info.height;
         for (var i = 0; i < piecesPerImage; i++) {
           var row = Math.floor(i / PRIZE_GRID_COLS);
           var col = i % PRIZE_GRID_COLS;
