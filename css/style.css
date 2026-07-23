@@ -94,6 +94,14 @@ html, body {
   color: var(--yellow);
 }
 
+.points-summary {
+  max-width: 480px;
+  margin: 0 auto 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--cyan);
+}
+
 .tabs {
   display: flex;
   justify-content: center;
@@ -197,6 +205,13 @@ main {
   line-height: 1.35;
 }
 
+.challenge-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
 .challenge-prize {
   display: inline-block;
   font-size: 0.82rem;
@@ -205,14 +220,83 @@ main {
   background: var(--yellow);
   padding: 3px 10px;
   border-radius: 999px;
-  margin-bottom: 12px;
 }
 
 .challenge-card.done .challenge-prize {
   background: var(--cyan);
 }
 
+.challenge-points {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--yellow);
+  background: rgba(255,210,63,0.12);
+  border: 1px solid rgba(255,210,63,0.4);
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
 .challenge-actions { display: flex; gap: 8px; }
+
+/* Prueba grafica (foto/video) */
+.proof-section {
+  margin-bottom: 12px;
+}
+
+.proof-media {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--card-border);
+  margin-bottom: 6px;
+}
+
+.proof-hint {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.proof-upload-label {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.06);
+  border: 1px dashed var(--card-border);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.proof-upload-label:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.proof-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.proof-remove-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--pink);
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
 
 .btn {
   font-family: 'Poppins', sans-serif;
@@ -378,6 +462,87 @@ main {
   font-size: 0.82rem;
   color: var(--text-dim);
   margin: 0;
+}
+
+.prizes-intro {
+  text-align: center;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.9rem;
+  max-width: 480px;
+  margin: 10px auto 22px;
+  line-height: 1.5;
+}
+
+.prize-grids {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.prize-image-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.prize-image-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin: 0 0 10px;
+}
+
+.prize-image-wrap.complete .prize-image-title {
+  color: var(--cyan);
+}
+
+.prize-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--prize-cols), 1fr);
+  gap: 3px;
+  aspect-ratio: var(--prize-cols) / var(--prize-rows);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid var(--card-border);
+}
+
+.prize-piece {
+  background-color: var(--card);
+  background-repeat: no-repeat;
+  background-size: calc(var(--prize-cols) * 100%) calc(var(--prize-rows) * 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prize-piece.locked {
+  background-color: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.2);
+  font-size: 1.4rem;
+}
+
+.prize-piece.unlocked {
+  animation: prize-piece-reveal 0.5s ease;
+}
+
+@keyframes prize-piece-reveal {
+  from { opacity: 0; transform: scale(1.15); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.prize-pending {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 20px;
 }
 
 .app-footer {

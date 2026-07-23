@@ -9,11 +9,13 @@ propio).
 
 - `index.html` — pantalla principal (retos + mis vales)
 - `css/style.css` — estilos
-- `js/challenges.js` — **lista de retos y premios** (edítala aquí si cambia algo)
+- `js/challenges.js` — **lista de retos, puntos y premios** (edítala aquí si cambia algo)
 - `js/firebase-config.js` — credenciales de tu proyecto de Firebase (a rellenar)
 - `js/app.js` — lógica de la app
 - `manifest.json` / `sw.js` — hacen la app instalable (PWA)
 - `icons/` — iconos de la app
+- `img/retos/` — las 3 fotos premio que se van desbloqueando por puntos (ver
+  sección "Puntos y fotos premio" más abajo)
 
 ## 1. Configurar Firebase (gratis, ~5 minutos)
 
@@ -108,6 +110,37 @@ pasar por PWABuilder.
 Abre [`js/challenges.js`](js/challenges.js) y cambia el texto de `text` o
 `prize` de cualquier reto. No cambies el `id` de retos ya publicados o se
 perderá su relación con el progreso guardado.
+
+## 6. Puntos y fotos premio
+
+Cada reto tiene un campo `points` en `js/challenges.js` (1 = trivial, 5 = muy
+duro, el reto estrella vale más). A más "hardcore" el reto, más puntos —
+ajusta esos números libremente, todo lo demás se recalcula solo.
+
+Además de los vales, hay 3 fotos sorpresa que se cortan en una cuadrícula de
+2x3 (6 piezas) y se van revelando trozo a trozo según el grupo suma puntos:
+al completar retos que sumen 1/18 del total de puntos posibles se revela la
+primera pieza, y así hasta completar las 18 piezas (primero se completa la
+foto 1, luego la 2, luego la 3).
+
+Para activarlo, copia tus 3 fotos dentro de `img/retos/` con estos nombres
+exactos (o cambia los nombres en `PRIZE_IMAGES`, en `js/challenges.js`):
+
+- `img/retos/premio1.jpg`
+- `img/retos/premio2.jpg`
+- `img/retos/premio3.jpg`
+
+Mientras esas fotos no existan, la pestaña "🖼️ Premios" muestra un aviso de
+"Imagen pendiente" sin romper el resto de la app.
+
+### Prueba gráfica por reto
+
+En la pestaña de retos, cada tarjeta tiene un botón "📎 Añadir foto/vídeo de
+prueba" para adjuntar una prueba gráfica del reto cumplido (máx. 4 MB). Esa
+prueba se guarda **solo en el móvil que la sube** (no se sincroniza por
+Firebase, a diferencia del progreso de retos/vales): un vídeo en base64
+supera fácilmente el límite de 1 MB por documento de Firestore, así que
+mezclarlo con el progreso compartido rompería la sincronización del grupo.
 
 ## Notas
 
