@@ -102,6 +102,18 @@ html, body {
   color: var(--cyan);
 }
 
+.daily-goal {
+  max-width: 480px;
+  margin: 0 auto 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--pink);
+}
+
+.daily-goal.met {
+  color: var(--cyan);
+}
+
 .tabs {
   display: flex;
   justify-content: center;
@@ -158,13 +170,52 @@ main {
 }
 
 .challenge-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.category-section {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
 }
 
 @media (min-width: 640px) {
-  .challenge-grid { grid-template-columns: 1fr 1fr; }
+  .category-section { grid-template-columns: 1fr 1fr; }
+}
+
+.category-title {
+  grid-column: 1 / -1;
+  font-family: 'Bungee', cursive;
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--yellow);
+  text-shadow: 0 0 16px rgba(255,210,63,0.25);
+}
+
+.locked-category-card {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 34px 20px;
+  opacity: 0.85;
+}
+
+.locked-category-icon {
+  font-size: 2rem;
+}
+
+.locked-category-text {
+  margin: 0;
+  max-width: 320px;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .challenge-card {

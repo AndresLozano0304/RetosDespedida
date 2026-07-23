@@ -1,4 +1,4 @@
-const CACHE_NAME = "retos-sayago-v6";
+const CACHE_NAME = "retos-sayago-v7";
 const APP_SHELL = [
   "./",
   "./index.html",

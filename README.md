@@ -1,6 +1,6 @@
 # 🔥 Bromas Despedida Sayago
 
-App web (PWA) con los 36 retos de la despedida. Cada reto completado desbloquea
+App web (PWA) con los 54 retos de la despedida. Cada reto completado desbloquea
 un vale por un premio. El progreso se sincroniza en tiempo real entre todos los
 móviles del grupo usando Firebase Firestore (plan gratuito, sin servidor
 propio).
@@ -142,11 +142,36 @@ Firebase, a diferencia del progreso de retos/vales): un vídeo en base64
 supera fácilmente el límite de 1 MB por documento de Firestore, así que
 mezclarlo con el progreso compartido rompería la sincronización del grupo.
 
+## 7. Categorías por día y objetivo de puntos
+
+Cada reto tiene un campo `category` en `js/challenges.js`: `"genericos"`
+(sin restricción, visible desde el minuto uno) o `"viernes"` / `"sabado"` /
+`"domingo"`. Los retos de un día concreto quedan **ocultos por completo**
+(sin texto ni pistas, solo un contador tipo "🔒 12 retos guardados para el
+viernes") hasta que el reloj del propio dispositivo alcanza la fecha de
+`CATEGORY_UNLOCK` de esa categoría — así nadie hace spoiler del reto del
+barco el viernes, por ejemplo. La ruleta tampoco puede sortear un reto
+todavía bloqueado.
+
+Las fechas de desbloqueo (`CATEGORY_UNLOCK`, en `js/challenges.js`) están
+puestas para la despedida del 24-26 de agosto de 2026; cambialas ahí si las
+fechas reales varían.
+
+Además, viernes y sábado tienen un **objetivo de puntos** (`DAILY_MILESTONES`)
+pensado para que no baste con hacer solo retos fáciles ("chorra", 1-2 puntos):
+el número está calculado para que sea matemáticamente imposible llegar sin
+completar al menos uno o dos retos más arriesgados de ese día. El cálculo
+exacto está documentado en el comentario junto a `DAILY_MILESTONES` en
+`js/challenges.js` — si añades o quitas retos, conviene revisar ese cálculo
+(hay un script de verificación rápido: `node -e` cargando el archivo con
+`vm.runInContext`, ver el historial de commits para un ejemplo). El domingo
+no tiene objetivo a propósito: es solo la mañana de la vuelta.
+
 ## Notas
 
-- El reto #36 ("Reto estrella") se dejó con un premio de ejemplo/genérico
-  porque no se especificó uno concreto — cámbialo en `challenges.js` si
-  queréis algo distinto.
+- El reto estrella ("RETO ESTRELLA: montarlo el sábado en un bus...") se
+  dejó con un premio de ejemplo/genérico porque no se especificó uno
+  concreto — cámbialo en `challenges.js` si queréis algo distinto.
 - El botón **"Reiniciar progreso (admin)"** al final de la app borra el
   progreso de TODO el grupo (pide doble confirmación). Útil para dejarlo a
   cero antes de empezar la despedida.

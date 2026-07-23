@@ -30,6 +30,7 @@
   var elUnlockPrize = document.getElementById("unlockPrize");
   var elConfettiLayer = document.getElementById("confettiLayer");
   var elPrizeGrids = document.getElementById("prizeGrids");
+  var elDailyGoal = document.getElementById("dailyGoal");
 
   var elWheelEmoji = document.getElementById("wheelEmoji");
   var elWheelNum = document.getElementById("wheelNum");
@@ -135,8 +136,53 @@
     renderChallenges();
     renderVouchers();
     renderProgress();
+    renderDailyGoal();
     renderWheel();
     renderPrizeGrids();
+  }
+
+  // --- Categorias / desbloqueo por fecha -----------------------------------
+
+  // "genericos" (sin fecha en CATEGORY_UNLOCK) esta siempre disponible; las
+  // demas categorias se desbloquean cuando el reloj del propio dispositivo
+  // alcanza su fecha (ver CATEGORY_UNLOCK en js/challenges.js).
+  function isCategoryUnlocked(category) {
+    var unlockAt = CATEGORY_UNLOCK[category];
+    if (!unlockAt) return true;
+    return new Date() >= unlockAt;
+  }
+
+  // Que dia del finde es "hoy" segun el reloj del dispositivo (el ultimo
+  // umbral ya alcanzado), para saber que objetivo diario mostrar. Antes de
+  // que arranque el finde no hay "dia actual" todavia.
+  function getCurrentTripDay() {
+    if (isCategoryUnlocked("domingo")) return "domingo";
+    if (isCategoryUnlocked("sabado")) return "sabado";
+    if (isCategoryUnlocked("viernes")) return "viernes";
+    return null;
+  }
+
+  function renderDailyGoal() {
+    if (!elDailyGoal) return;
+    var day = getCurrentTripDay();
+    var target = day ? DAILY_MILESTONES[day] : null;
+    if (!day || target == null) {
+      elDailyGoal.style.display = "none";
+      return;
+    }
+    var meta = CATEGORY_META.filter(function (m) {
+      return m.key === day;
+    })[0];
+    var earned = getEarnedPoints();
+    var met = earned >= target;
+    elDailyGoal.style.display = "block";
+    elDailyGoal.className = "daily-goal" + (met ? " met" : "");
+    elDailyGoal.textContent =
+      (met ? "🏆 ¡Objetivo de " + meta.label + " conseguido! " : "🎯 Objetivo de " + meta.label + ": ") +
+      Math.min(earned, target) +
+      " / " +
+      target +
+      " puntos";
   }
 
   // --- Puntuacion ---------------------------------------------------------
@@ -350,62 +396,109 @@
     });
   }
 
+  function buildChallengeCard(c) {
+    var done = !!(progress[c.id] && progress[c.id].completed);
+    var card = document.createElement("div");
+    card.className = "challenge-card" + (done ? " done" : "") + (c.star ? " star" : "");
+
+    var num = document.createElement("div");
+    num.className = "challenge-num";
+    num.textContent = "#" + c.id;
+    card.appendChild(num);
+
+    var text = document.createElement("p");
+    text.className = "challenge-text";
+    text.textContent = c.text;
+    card.appendChild(text);
+
+    var meta = document.createElement("div");
+    meta.className = "challenge-meta";
+
+    var prize = document.createElement("span");
+    prize.className = "challenge-prize";
+    prize.textContent = "🎟️ " + c.prize;
+    meta.appendChild(prize);
+
+    var points = document.createElement("span");
+    points.className = "challenge-points";
+    points.textContent = "⭐ " + (c.points || 0) + " pts";
+    meta.appendChild(points);
+
+    card.appendChild(meta);
+
+    card.appendChild(renderProofSection(c.id));
+
+    var actions = document.createElement("div");
+    actions.className = "challenge-actions";
+
+    var btn = document.createElement("button");
+    if (done) {
+      btn.className = "btn btn-done";
+      btn.textContent = "✅ COMPLETADO";
+      btn.disabled = true;
+    } else {
+      btn.className = "btn btn-do";
+      btn.textContent = "MARCAR HECHO 🔥";
+      btn.addEventListener("click", function () {
+        openConfirm(
+          '¿Seguro que se ha completado el reto "' + c.text + '"?',
+          { type: "complete", id: c.id }
+        );
+      });
+    }
+    actions.appendChild(btn);
+    card.appendChild(actions);
+
+    return card;
+  }
+
+  function buildLockedCategoryCard(catMeta, count) {
+    var card = document.createElement("div");
+    card.className = "challenge-card locked-category-card";
+
+    var icon = document.createElement("div");
+    icon.className = "locked-category-icon";
+    icon.textContent = "🔒";
+    card.appendChild(icon);
+
+    var text = document.createElement("p");
+    text.className = "locked-category-text";
+    text.textContent = count + (count === 1 ? " reto guardado para " : " retos guardados para ") + catMeta.unlockLabel + ". ¡Paciencia!";
+    card.appendChild(text);
+
+    return card;
+  }
+
+  // Los retos se agrupan por categoria (genericos primero, luego los dias
+  // en orden) para que se vea de un vistazo que hay para cada dia. Las
+  // categorias con fecha de desbloqueo aun no alcanzada NO muestran sus
+  // retos (ni texto ni pistas): solo una tarjeta con el recuento, para
+  // evitar spoilers como el reto del barco.
   function renderChallenges() {
     elChallengeList.innerHTML = "";
-    CHALLENGES.forEach(function (c) {
-      var done = !!(progress[c.id] && progress[c.id].completed);
-      var card = document.createElement("div");
-      card.className = "challenge-card" + (done ? " done" : "") + (c.star ? " star" : "");
+    CATEGORY_META.forEach(function (catMeta) {
+      var items = CHALLENGES.filter(function (c) {
+        return c.category === catMeta.key;
+      });
+      if (!items.length) return;
 
-      var num = document.createElement("div");
-      num.className = "challenge-num";
-      num.textContent = "#" + c.id;
-      card.appendChild(num);
+      var section = document.createElement("div");
+      section.className = "category-section";
 
-      var text = document.createElement("p");
-      text.className = "challenge-text";
-      text.textContent = c.text;
-      card.appendChild(text);
+      var header = document.createElement("h2");
+      header.className = "category-title";
+      header.textContent = catMeta.icon + " " + catMeta.label;
+      section.appendChild(header);
 
-      var meta = document.createElement("div");
-      meta.className = "challenge-meta";
-
-      var prize = document.createElement("span");
-      prize.className = "challenge-prize";
-      prize.textContent = "🎟️ " + c.prize;
-      meta.appendChild(prize);
-
-      var points = document.createElement("span");
-      points.className = "challenge-points";
-      points.textContent = "⭐ " + (c.points || 0) + " pts";
-      meta.appendChild(points);
-
-      card.appendChild(meta);
-
-      card.appendChild(renderProofSection(c.id));
-
-      var actions = document.createElement("div");
-      actions.className = "challenge-actions";
-
-      var btn = document.createElement("button");
-      if (done) {
-        btn.className = "btn btn-done";
-        btn.textContent = "✅ COMPLETADO";
-        btn.disabled = true;
-      } else {
-        btn.className = "btn btn-do";
-        btn.textContent = "MARCAR HECHO 🔥";
-        btn.addEventListener("click", function () {
-          openConfirm(
-            '¿Seguro que se ha completado el reto "' + c.text + '"?',
-            { type: "complete", id: c.id }
-          );
+      if (isCategoryUnlocked(catMeta.key)) {
+        items.forEach(function (c) {
+          section.appendChild(buildChallengeCard(c));
         });
+      } else {
+        section.appendChild(buildLockedCategoryCard(catMeta, items.length));
       }
-      actions.appendChild(btn);
-      card.appendChild(actions);
 
-      elChallengeList.appendChild(card);
+      elChallengeList.appendChild(section);
     });
   }
 
@@ -526,7 +619,7 @@
 
   function getAvailableChallenges() {
     return CHALLENGES.filter(function (c) {
-      return !(progress[c.id] && progress[c.id].completed);
+      return isCategoryUnlocked(c.category) && !(progress[c.id] && progress[c.id].completed);
     });
   }
 
@@ -548,7 +641,12 @@
 
     var available = getAvailableChallenges();
     if (available.length === 0) {
-      elWheelText.textContent = "¡No quedan retos! Os habéis fundido los 36. Leyendas. 🏆";
+      var pendingElsewhere = CHALLENGES.some(function (c) {
+        return !(progress[c.id] && progress[c.id].completed);
+      });
+      elWheelText.textContent = pendingElsewhere
+        ? "Ya no quedan retos disponibles por ahora — hay más guardados para más adelante. Vuelve a probar cuando toque."
+        : "¡No quedan retos! Os habéis fundido los " + CHALLENGES.length + ". Leyendas. 🏆";
       elWheelActions.innerHTML = "";
       return;
     }
