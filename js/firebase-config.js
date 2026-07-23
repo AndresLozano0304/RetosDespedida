@@ -9,7 +9,6 @@
 const firebaseConfig = {
   apiKey: "AIzaSyAUEswMABqnoJFB2hXXcZNfOYtRovmIvs0",
   authDomain: "retos-sayago.firebaseapp.com",
-  databaseURL: "TU_DATABASE_URL",
   projectId: "retos-sayago",
   storageBucket: "retos-sayago.firebasestorage.app",
   messagingSenderId: "176732657519",

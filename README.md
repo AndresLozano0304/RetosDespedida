@@ -2,8 +2,8 @@
 
 App web (PWA) con los 36 retos de la despedida. Cada reto completado desbloquea
 un vale por un premio. El progreso se sincroniza en tiempo real entre todos los
-móviles del grupo usando Firebase Realtime Database (plan gratuito, sin
-servidor propio).
+móviles del grupo usando Firebase Firestore (plan gratuito, sin servidor
+propio).
 
 ## Contenido de la carpeta
 
@@ -19,18 +19,20 @@ servidor propio).
 
 1. Ve a https://console.firebase.google.com y crea un proyecto nuevo (nombre
    libre, ej. "retos-sayago"). No hace falta activar Analytics.
-2. En el menú lateral entra en **Realtime Database** → **Crear base de
-   datos** → elige una región (ej. Europe-west1) → empieza en **modo de
-   prueba** (test mode).
-3. Ve a **Reglas** de esa base de datos y pon esto (abierto para lectura y
+2. En el menú lateral entra en **Build → Firestore Database** → **Crear base
+   de datos** → elige una región (ej. eur3 / europe-west) → empieza en **modo
+   de prueba** (test mode).
+3. Ve a la pestaña **Reglas** de Firestore y pon esto (abierto para lectura y
    escritura, suficiente para un evento privado puntual; nadie debería
    compartir la URL fuera del grupo):
 
-   ```json
-   {
-     "rules": {
-       ".read": true,
-       ".write": true
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /{document=**} {
+         allow read, write: if true;
+       }
      }
    }
    ```
@@ -39,7 +41,9 @@ servidor propio).
    **General** → sección "Tus apps" → añade una app **Web** (icono `</>`).
    Dale un nombre y copia el objeto `firebaseConfig` que te muestra.
 5. Pega esos valores en [`js/firebase-config.js`](js/firebase-config.js),
-   sustituyendo los `"TU_..."`.
+   sustituyendo los `"TU_..."`. Este archivo se carga con un `<script>`
+   normal, así que debe contener **solo** el objeto `firebaseConfig` — no
+   añadas líneas `import` ni `initializeApp` (eso ya lo hace `js/app.js`).
 
 Si no configuras Firebase, la app sigue funcionando pero cada móvil guardará
 su propio progreso en local (no compartido) — útil para probar antes de

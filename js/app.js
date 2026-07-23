@@ -36,12 +36,15 @@
         throw new Error("Firebase no configurado todavia");
       }
       firebase.initializeApp(firebaseConfig);
-      db = firebase.database();
+      db = firebase.firestore();
       elConnStatus.textContent = "🔄 Conectando con el grupo...";
-      db.ref("retos").on(
-        "value",
+      db.collection("retos").onSnapshot(
         function (snapshot) {
-          progress = snapshot.val() || {};
+          var next = {};
+          snapshot.forEach(function (doc) {
+            next[doc.id] = doc.data();
+          });
+          progress = next;
           elConnStatus.textContent = "✅ Progreso sincronizado con todo el grupo";
           renderAll();
         },
@@ -75,7 +78,7 @@
       localStorage.setItem(LOCAL_KEY, JSON.stringify(progress));
       renderAll();
     } else {
-      db.ref("retos/" + id).set(entry);
+      db.collection("retos").doc(String(id)).set(entry, { merge: true });
     }
   }
 
@@ -92,7 +95,10 @@
       localStorage.setItem(LOCAL_KEY, JSON.stringify(progress));
       renderAll();
     } else {
-      db.ref("retos/" + id).update({ redeemed: true, redeemedAt: Date.now() });
+      db.collection("retos").doc(String(id)).set(
+        { redeemed: true, redeemedAt: Date.now() },
+        { merge: true }
+      );
     }
   }
 
@@ -100,10 +106,18 @@
     progress = {};
     if (usingLocalFallback || !db) {
       localStorage.removeItem(LOCAL_KEY);
+      renderAll();
     } else {
-      db.ref("retos").remove();
+      db.collection("retos")
+        .get()
+        .then(function (snapshot) {
+          var batch = db.batch();
+          snapshot.forEach(function (doc) {
+            batch.delete(doc.ref);
+          });
+          return batch.commit();
+        });
     }
-    renderAll();
   }
 
   function renderAll() {
