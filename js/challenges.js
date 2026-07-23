@@ -38,5 +38,6 @@ const CHALLENGES = [
   { id: 33, text: "Tirarse del catamarán en marcha", prize: "3 Copas" },
   { id: 34, text: "Tirarte en bomba en una piscina de beach club/discoteca", prize: "Ronda de cervezas" },
   { id: 35, text: "Sacar un dospa con tu cuñao", prize: "2 Copas" },
-  { id: 36, text: "RETO ESTRELLA: montarlo el sábado en un bus a tomar por culo", prize: "🌟 La leyenda del bus — ¡premio al gusto del grupo!", star: true },
+  { id: 36, text: "Coger 'prestadas' unas gafas", prize: "Ronda de cervezas" },
+  { id: 37, text: "RETO ESTRELLA: montarlo el sábado en un bus a tomar por culo", prize: "🌟 La leyenda del bus — ¡premio al gusto del grupo!", star: true },
 ];
