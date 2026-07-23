@@ -1,0 +1,50 @@
+const CACHE_NAME = "retos-sayago-v3";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./css/style.css",
+  "./js/app.js",
+  "./js/challenges.js",
+  "./js/firebase-config.js",
+  "./manifest.json",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {
+  const url = event.request.url;
+  // No cachear llamadas a Firebase/Google APIs: siempre red, para no servir progreso desactualizado.
+  if (url.includes("firebaseio.com") || url.includes("googleapis.com") || url.includes("gstatic.com")) {
+    return;
+  }
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      return (
+        cached ||
+        fetch(event.request).then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        }).catch(() => cached)
+      );
+    })
+  );
+});

@@ -1,0 +1,496 @@
+:root {
+  --bg: #0d0221;
+  --bg2: #1a0b3d;
+  --pink: #ff2e88;
+  --yellow: #ffd23f;
+  --cyan: #22e6d4;
+  --purple: #7b2ff7;
+  --card: #17103a;
+  --card-border: #33235e;
+  --text: #f5f3ff;
+  --text-dim: #b3a8d6;
+  font-size: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255,46,136,0.35), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(34,230,212,0.25), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(123,47,247,0.35), transparent 50%),
+    var(--bg);
+}
+
+.app-header {
+  text-align: center;
+  padding: 28px 16px 12px;
+}
+
+.app-title {
+  font-family: 'Bungee', cursive;
+  font-size: clamp(1.4rem, 6vw, 2.2rem);
+  line-height: 1.2;
+  margin: 0;
+  background: linear-gradient(90deg, var(--pink), var(--yellow), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px rgba(255,46,136,0.25);
+  letter-spacing: 0.5px;
+}
+
+.app-title span { color: var(--yellow); -webkit-text-fill-color: var(--yellow); }
+
+.app-subtitle {
+  margin: 8px 0 18px;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.progress-wrap {
+  max-width: 480px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--pink), var(--yellow));
+  transition: width 0.5s ease;
+  border-radius: 999px;
+}
+
+.progress-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: var(--yellow);
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tab-btn {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(255,46,136,0.4);
+}
+
+.badge {
+  display: inline-block;
+  background: var(--yellow);
+  color: #1a0b3d;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 0.75rem;
+  margin-left: 4px;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 14px 100px;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.conn-status {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  min-height: 1em;
+}
+
+.challenge-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .challenge-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.challenge-card {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: 18px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+.challenge-card.star {
+  border-image: linear-gradient(135deg, var(--pink), var(--yellow), var(--cyan)) 1;
+  background: linear-gradient(160deg, var(--card), #2a1050);
+}
+
+.challenge-card.done {
+  border-color: var(--cyan);
+  box-shadow: 0 0 24px rgba(34,230,212,0.25);
+}
+
+.challenge-card:active { transform: scale(0.98); }
+
+.challenge-num {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-family: 'Bungee', cursive;
+  font-size: 1.4rem;
+  color: rgba(255,255,255,0.08);
+}
+
+.challenge-text {
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin: 0 34px 10px 0;
+  line-height: 1.35;
+}
+
+.challenge-prize {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--yellow);
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.challenge-card.done .challenge-prize {
+  background: var(--cyan);
+}
+
+.challenge-actions { display: flex; gap: 8px; }
+
+.btn {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  transition: transform 0.12s ease, opacity 0.2s ease;
+}
+
+.btn:active { transform: scale(0.96); }
+
+.btn-do {
+  flex: 1;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  color: white;
+  box-shadow: 0 4px 14px rgba(255,46,136,0.35);
+}
+
+.btn-done {
+  flex: 1;
+  background: rgba(34,230,212,0.15);
+  color: var(--cyan);
+  border: 2px solid var(--cyan);
+  cursor: default;
+}
+
+.btn-redeem {
+  background: linear-gradient(90deg, var(--yellow), var(--pink));
+  color: #1a0b3d;
+  white-space: nowrap;
+}
+
+.btn-redeemed {
+  background: transparent;
+  color: var(--text-dim);
+  border: 2px solid var(--card-border);
+  cursor: default;
+  white-space: nowrap;
+}
+
+.wheel-wrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.wheel-card {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(160deg, var(--card), #2a1050);
+  border: 3px solid var(--yellow);
+  border-radius: 24px;
+  padding: 36px 24px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(255,210,63,0.15);
+}
+
+.wheel-emoji {
+  font-size: 3.2rem;
+  margin-bottom: 14px;
+  display: inline-block;
+}
+
+.wheel-emoji.spinning {
+  animation: wheel-spin 0.5s linear infinite;
+}
+
+@keyframes wheel-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.wheel-num {
+  font-family: 'Bungee', cursive;
+  color: rgba(255,255,255,0.35);
+  font-size: 0.95rem;
+  margin: 0 0 6px;
+}
+
+.wheel-text {
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  margin: 0 0 18px;
+  min-height: 2.8em;
+}
+
+.wheel-prize {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--yellow);
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.wheel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wheel-spin-btn {
+  font-size: 1rem;
+  padding: 16px 20px;
+}
+
+.wheel-secondary-btn {
+  background: transparent;
+  color: var(--text-dim);
+  border: 2px solid var(--card-border);
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-dim);
+  margin-top: 60px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.voucher-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.voucher-card {
+  position: relative;
+  background: linear-gradient(135deg, #2a1050, #17103a);
+  border: 2px dashed var(--yellow);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.voucher-card.redeemed {
+  border-style: solid;
+  border-color: var(--card-border);
+  opacity: 0.55;
+}
+
+.voucher-icon { font-size: 2rem; }
+
+.voucher-info { flex: 1; min-width: 160px; }
+
+.voucher-prize {
+  font-family: 'Bungee', cursive;
+  font-size: 1rem;
+  color: var(--yellow);
+  margin: 0 0 4px;
+}
+
+.voucher-reto {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 20px 16px 60px;
+}
+
+.reset-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.35);
+  font-size: 0.75rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,2,20,0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-card {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: 20px;
+  padding: 26px 22px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-text {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 20px;
+}
+
+.modal-actions { display: flex; flex-direction: column; gap: 10px; }
+
+.btn-yes {
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
+  color: #0d0221;
+}
+
+.btn-no {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--card-border);
+}
+
+.voucher-reveal {
+  background: linear-gradient(160deg, #2a1050, #17103a);
+  border: 3px solid var(--yellow);
+  border-radius: 24px;
+  padding: 36px 26px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  animation: pop-in 0.4s cubic-bezier(.2,1.4,.4,1);
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.6) rotate(-4deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.voucher-reveal-burst { font-size: 2.4rem; margin-bottom: 6px; }
+
+.voucher-reveal-title {
+  font-family: 'Bungee', cursive;
+  color: var(--yellow);
+  font-size: 1.2rem;
+  margin: 0 0 10px;
+}
+
+.voucher-reveal-prize {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 22px;
+}
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: 8px;
+  height: 14px;
+  opacity: 0.9;
+  animation: confetti-fall linear forwards;
+}
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0.4;
+  }
+}

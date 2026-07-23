@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>Bromas Despedida Sayago</title>
+<meta name="description" content="Retos de la despedida de soltero de Sayago. Cada reto desbloquea un vale por un premio." />
+<meta name="theme-color" content="#0d0221" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<header class="app-header">
+  <h1 class="app-title">🔥 BROMAS DESPEDIDA <span>SAYAGO</span> 🔥</h1>
+  <p class="app-subtitle">36 retos. 36 vales. 0 vergüenza.</p>
+
+  <div class="progress-wrap" aria-label="Progreso de retos completados">
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <span id="progressLabel" class="progress-label">0 / 36 retos</span>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="retos" role="tab" aria-selected="true">🎯 RETOS</button>
+    <button class="tab-btn" data-tab="ruleta" role="tab" aria-selected="false">🎲 RULETA</button>
+    <button class="tab-btn" data-tab="vales" role="tab" aria-selected="false">🎟️ MIS VALES <span id="valesCount" class="badge">0</span></button>
+  </nav>
+</header>
+
+<main>
+  <section id="retosTab" class="tab-panel active">
+    <div id="connStatus" class="conn-status">Conectando...</div>
+    <div id="challengeList" class="challenge-grid"></div>
+  </section>
+
+  <section id="valesTab" class="tab-panel">
+    <div id="emptyVales" class="empty-state">
+      <p>🎟️ Todavía no habéis desbloqueado ningún vale.</p>
+      <p>¡A liarla!</p>
+    </div>
+    <div id="voucherList" class="voucher-grid"></div>
+  </section>
+
+  <section id="ruletaTab" class="tab-panel">
+    <div class="wheel-wrap">
+      <div id="wheelCard" class="wheel-card">
+        <div id="wheelEmoji" class="wheel-emoji">🎲</div>
+        <p id="wheelNum" class="wheel-num"></p>
+        <p id="wheelText" class="wheel-text">Pulsa el botón para que la ruleta elija vuestro próximo reto</p>
+        <span id="wheelPrize" class="wheel-prize" style="display:none;"></span>
+        <div id="wheelActions" class="wheel-actions">
+          <button id="wheelSpinBtn" class="btn btn-yes wheel-spin-btn">GIRAR RULETA 🎲</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="app-footer">
+  <button id="resetBtn" class="reset-btn">⚠️ Reiniciar progreso (admin)</button>
+</footer>
+
+<!-- Modal confirmacion -->
+<div id="confirmModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <p id="confirmText" class="modal-text"></p>
+    <div class="modal-actions">
+      <button id="confirmYes" class="btn btn-yes">SÍ, HECHO 💪</button>
+      <button id="confirmNo" class="btn btn-no">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal vale desbloqueado -->
+<div id="unlockModal" class="modal-overlay hidden">
+  <div class="voucher-reveal">
+    <div class="voucher-reveal-burst">🎉🍻🎉</div>
+    <p class="voucher-reveal-title">¡VALE DESBLOQUEADO!</p>
+    <p id="unlockPrize" class="voucher-reveal-prize"></p>
+    <button id="unlockClose" class="btn btn-yes">GENIAL</button>
+  </div>
+</div>
+
+<div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/challenges.js"></script>
+<script src="js/app.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

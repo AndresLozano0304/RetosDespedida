@@ -1,0 +1,118 @@
+# 🔥 Bromas Despedida Sayago
+
+App web (PWA) con los 36 retos de la despedida. Cada reto completado desbloquea
+un vale por un premio. El progreso se sincroniza en tiempo real entre todos los
+móviles del grupo usando Firebase Realtime Database (plan gratuito, sin
+servidor propio).
+
+## Contenido de la carpeta
+
+- `index.html` — pantalla principal (retos + mis vales)
+- `css/style.css` — estilos
+- `js/challenges.js` — **lista de retos y premios** (edítala aquí si cambia algo)
+- `js/firebase-config.js` — credenciales de tu proyecto de Firebase (a rellenar)
+- `js/app.js` — lógica de la app
+- `manifest.json` / `sw.js` — hacen la app instalable (PWA)
+- `icons/` — iconos de la app
+
+## 1. Configurar Firebase (gratis, ~5 minutos)
+
+1. Ve a https://console.firebase.google.com y crea un proyecto nuevo (nombre
+   libre, ej. "retos-sayago"). No hace falta activar Analytics.
+2. En el menú lateral entra en **Realtime Database** → **Crear base de
+   datos** → elige una región (ej. Europe-west1) → empieza en **modo de
+   prueba** (test mode).
+3. Ve a **Reglas** de esa base de datos y pon esto (abierto para lectura y
+   escritura, suficiente para un evento privado puntual; nadie debería
+   compartir la URL fuera del grupo):
+
+   ```json
+   {
+     "rules": {
+       ".read": true,
+       ".write": true
+     }
+   }
+   ```
+
+4. Ve a **Configuración del proyecto** (icono del engranaje) → pestaña
+   **General** → sección "Tus apps" → añade una app **Web** (icono `</>`).
+   Dale un nombre y copia el objeto `firebaseConfig` que te muestra.
+5. Pega esos valores en [`js/firebase-config.js`](js/firebase-config.js),
+   sustituyendo los `"TU_..."`.
+
+Si no configuras Firebase, la app sigue funcionando pero cada móvil guardará
+su propio progreso en local (no compartido) — útil para probar antes de
+tenerlo listo.
+
+## 2. Probar en local
+
+Abre una terminal en esta carpeta y ejecuta un servidor estático simple
+(no puede abrirse con doble clic por restricciones del navegador con
+Service Workers y `fetch`):
+
+```bash
+npx serve .
+```
+
+o con Python:
+
+```bash
+python -m http.server 8080
+```
+
+Abre `http://localhost:8080` en el navegador del móvil (misma red WiFi que
+el ordenador) o en el navegador del propio PC.
+
+## 3. Desplegar en GitHub Pages (gratis)
+
+```bash
+git init
+git add .
+git commit -m "Primera version de la app"
+git branch -M main
+git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
+git push -u origin main
+```
+
+Luego en GitHub: **Settings → Pages → Source: Deploy from a branch → main /
+(root)** → Guardar. En 1-2 minutos tu app estará en:
+
+```
+https://TU_USUARIO.github.io/TU_REPO/
+```
+
+Esa es la URL que compartirás con el grupo.
+
+## 4. Generar el APK (gratis, sin Android Studio)
+
+1. Ve a https://www.pwabuilder.com
+2. Pega la URL de GitHub Pages del paso anterior y pulsa **Start**.
+3. PWABuilder analizará la PWA (manifest, service worker, iconos ya están
+   listos). Ve a la pestaña **Android** → **Generate Package**.
+4. Descarga el `.apk` (o `.aab`) generado.
+5. Pásalo al móvil (por ejemplo por WhatsApp/Drive) e instálalo. Android
+   pedirá permitir "instalar apps de fuentes desconocidas" la primera vez.
+
+Alternativa sin instalar nada: desde el propio navegador del móvil (Chrome
+Android), al entrar en la URL debería aparecer un banner o menú **"Instalar
+app" / "Añadir a pantalla de inicio"** — se instala igual como icono, sin
+pasar por PWABuilder.
+
+## 5. Editar retos o premios
+
+Abre [`js/challenges.js`](js/challenges.js) y cambia el texto de `text` o
+`prize` de cualquier reto. No cambies el `id` de retos ya publicados o se
+perderá su relación con el progreso guardado.
+
+## Notas
+
+- El reto #36 ("Reto estrella") se dejó con un premio de ejemplo/genérico
+  porque no se especificó uno concreto — cámbialo en `challenges.js` si
+  queréis algo distinto.
+- El botón **"Reiniciar progreso (admin)"** al final de la app borra el
+  progreso de TODO el grupo (pide doble confirmación). Útil para dejarlo a
+  cero antes de empezar la despedida.
+- Las reglas de Firebase de arriba son abiertas (cualquiera con la URL de la
+  base de datos podría leer/escribir). Es aceptable para un evento privado y
+  temporal; no seria apropiado para una app publica o de larga duracion.
