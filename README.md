@@ -154,7 +154,7 @@ barco el viernes, por ejemplo. La ruleta tampoco puede sortear un reto
 todavía bloqueado.
 
 Las fechas de desbloqueo (`CATEGORY_UNLOCK`, en `js/challenges.js`) están
-puestas para la despedida del 24-26 de agosto de 2026; cambialas ahí si las
+puestas para la despedida del 24-26 de julio de 2026; cambialas ahí si las
 fechas reales varían.
 
 Además, viernes y sábado tienen un **objetivo de puntos** (`DAILY_MILESTONES`)

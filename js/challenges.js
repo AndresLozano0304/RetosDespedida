@@ -80,16 +80,16 @@ const CHALLENGES = [
   { id: 54, text: "Dejar una propina o nota de agradecimiento random a un camarero de camino a casa", prize: "Chupito", points: 1, category: "domingo" },
 ];
 
-// Fechas reales del finde: viernes 2026-08-24 (desde el almuerzo) a domingo
-// 2026-08-26 (hasta despues de comer). Los retos de categoria "viernes" /
+// Fechas reales del finde: viernes 2026-07-24 (desde el almuerzo) a domingo
+// 2026-07-26 (hasta despues de comer). Los retos de categoria "viernes" /
 // "sabado" / "domingo" quedan ocultos (sin texto ni pistas, para evitar
 // spoilers como el del barco) hasta que la fecha/hora del propio dispositivo
 // alcanza su desbloqueo. "genericos" no tiene fecha: siempre disponible.
 // new Date(año, mesIndex0, dia, hora) usa Date LOCAL del dispositivo.
 const CATEGORY_UNLOCK = {
-  viernes: new Date(2026, 7, 24, 12, 0, 0), // 24 ago 2026, desde el almuerzo
-  sabado: new Date(2026, 7, 25, 0, 0, 0), // 25 ago 2026, desde primera hora
-  domingo: new Date(2026, 7, 26, 0, 0, 0), // 26 ago 2026, desde primera hora
+  viernes: new Date(2026, 6, 24, 12, 0, 0), // 24 jul 2026, desde el almuerzo
+  sabado: new Date(2026, 6, 25, 0, 0, 0), // 25 jul 2026, desde primera hora
+  domingo: new Date(2026, 6, 26, 0, 0, 0), // 26 jul 2026, desde primera hora
   genericos: null, // sin restriccion, siempre disponible
 };
 
